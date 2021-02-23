@@ -1,0 +1,360 @@
+---
+title: "Meta-analysis: an introduction"
+author: "Paolo Eusebi"
+date: "22/2/2021"
+output:
+  revealjs::revealjs_presentation:
+    theme: moon
+    self_contained: false
+    reveal_options:
+      slideNumber: true
+      
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+## Outline
+
+- Meta-analysis
+- Heterogeneity
+- Fixed effects model
+- Random effects model
+- Publication bias
+
+## Definition
+
+Meta-analysis is a quantitative approach for systematically combining results of  previous studies to arrive at conclusions about the body of research
+
+- Quantitative: numbers 
+- Systematic: methodical 
+- Combining: putting together / summing up
+- Previous research: already done 
+- Conclusions: new knowledge 
+
+A study collects data from individual subjects
+
+A meta-analysis collects data from individual studies
+
+## Why
+
+- Identify heterogeneity in effects among multiple studies and, where appropriate, provide summary measure
+- Increase statistical power and precision to detect an effect
+- Reduce the subjectivity of study comparisons by using systematic and explicit comparison procedure
+- Identify data gap in the knowledge base and suggest direction for future research
+- Calculate sample size for future studies
+
+## Could we just add the data from all the trials togheter?
+
+* One approach to combining trials would be to add all the treatment groups together, add all the control groups together, and compare the totals
+* This is wrong for several reasons, and it can give the wrong answer
+* Breaks the power of randomization
+* Imbalances within trials introduce bias
+
+
+## A two-stage process
+
+1. A summary statistic is calculated for each study, to describe the observed intervention effect.
+
+2. A summary (combined) intervention effect estimate is calculated as a weighted average. 
+
+$$ \widehat y = \frac{\sum y_{i} \cdot w_{i}}{\sum w_{i}} $$
+
+$y_{i}$ study estimate
+
+$w_{i}$ study weight
+
+
+## The inverse-variance method
+
+* The weight given to each study is chosen to be the inverse of the variance of the effect estimate
+
+* Larger studies, which have smaller standard errors, are given more weight than smaller studies, which have larger standard errors. 
+
+* This choice of weights minimizes the imprecision (uncertainty) of the pooled effect estimate.
+
+$$ \widehat y = \frac{\sum y_{i} \cdot (1/V_i)}{\sum (1/V_i)} $$
+
+$$ w_{i} = 1/V_i $$
+
+
+## Thrombolysis in Stroke (Cochrane Review 2014)
+
+**Population**: Acute ischaemic stroke
+
+**Intervention**: Any thrombolytic agent
+
+**Comparison**: Placebo
+
+**Outcome**: Death or dependency by time to treatment up to 6 hours
+
+*Wardlaw et al. "Thrombolysis for acute ischaemic stroke." Cochrane database of systematic reviews 7 (2014).*
+
+## Thrombolysis in Stroke (Cochrane Review 2014)
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(readxl)
+library(kableExtra)
+df <- read_excel("thrombolysis.xlsx")
+df 
+```
+
+## Thrombolysis in Stroke (Cochrane Review 2014)
+
+```{r, echo = FALSE, message=FALSE, warning=FALSE}
+library(meta)
+a <- metabin(event.e = d.trom,
+             n.e = n.trom,
+             event.c = d.cont,
+             n.c = n.cont, studlab = paste(Study, Year),
+             data = df)       
+forest(a, overall = F, plotwidth = "4.5cm")   
+```
+
+
+## Heterogeneity
+
+**Definition**
+
+Heterogeneity is the variation between the studies results.
+
+**Sources**
+
+* Patients: diagnosis, in- and exclusion criteria, etc.
+
+* Interventions: type, dose, duration, etc.
+
+* Outcomes: type, scale, cut-off points, duration of follow-up, etc.
+
+* Quality and methodology: randomised or not, allocation concealment, blinding, etc.
+
+* ...
+
+
+## Heterogeneity
+
+**Forest plot**
+
+Do confidence intervals of studies overlap with each other and the summary effect?
+
+
+**Statistics**
+
+* Chi-square test for heterogeneity (e.g. Cochran Q test)
+Tests whether the individual effects are farther away from the common effect, beyond what is expected by chance. Poor power (P-value < 0.10 indicates significant heterogeneity)
+
+* $I^2$ statistics (function of Q)
+
+
+## Heterogeneity
+
+Thresholds for the interpretation of the $I^2$ statistic can be misleading, since the importance of inconsistency depends on several factors. 
+
+A rough guide to interpretation in the context of meta-analyses of randomized trials is as follows:
+
+* 0% to 40%: might not be important;
+* 30% to 60%: may represent moderate heterogeneity*;
+* 50% to 90%: may represent substantial heterogeneity*;
+* 75% to 100%: considerable heterogeneity*.
+
+## How to deal with heterogeneity
+
+* Do not pool at all
+
+* Ignore heterogeneity: use fixed effect model
+
+* Allow for heterogeneity: use random effects model
+
+* Explore heterogeneity
+
+
+## Meta-analysis of binary data
+
+1. Mantel-Haenszel method 
+2. Peto method 
+3. Maximum-Likelihood 
+4. Exact methods of interval estimation
+Fixed effect meta-analysis
+
+
+## Fixed effect meta-analysis
+
+Fixed effects model assumes that the true effect of treatment is common in each study.
+
+$$ \widehat y = \frac{\sum y_{i} \cdot (1/SE_i)}{\sum (1/SE_i)} $$
+
+$$ w_{i} = 1/SE_i $$
+
+
+## Fixed effect meta-analysis
+```{r, echo = T}
+a <- metabin(event.e = d.trom,
+             n.e = n.trom,
+             event.c = d.cont,
+             n.c = n.cont,
+             sm = "OR",
+             method = "Peto",
+             studlab = paste(Study, Year),
+             data = df)
+```
+
+## Fixed effect meta-analysis
+
+```{r, echo = T}
+summary(a,
+        comb.random = FALSE)
+```
+
+## Fixed effect meta-analysis
+
+```{r}
+forest(a, comb.random = FALSE, plotwidth = "2.65cm")   
+```
+
+
+## Random effect meta-analysis
+
+The treatment effects for the individual studies are assumed to vary around some overall average treatment effect 
+
+Allows for random error plus inter-study variability 
+
+$$ \widehat y = \frac{\sum y_{i} \cdot 1/(V_i+T^2)}{\sum 1/(V_i+T^2)} $$
+
+$$ w_{i} = 1/(V_i+T^2) $$
+
+## Random effect meta-analysis
+
+There are several approaches to be taken:
+
+* Method of moments approach (e.g. DerSimonian-Laird)
+* Hartung-Makambi 
+* Sidik-Jonkman 
+* Restricted Maximum Likelihood 
+
+*Langan et al. A comparison of heterogeneity variance estimators in simulated random-effects meta-analyses. Res Synth Methods 2019*
+
+## Random effect meta-analysis
+
+```{r, echo = T}
+r <- metabin(event.e = d.trom,
+             n.e = n.trom,
+             event.c = d.cont,
+             n.c = n.cont,
+             sm = "OR",
+             method = "Peto",
+             method.tau = "REML",
+             studlab = paste(Study, Year),
+             comb.fixed = FALSE,
+             comb.random = TRUE,
+             data = df)
+```
+
+## Random effect meta-analysis
+
+```{r, echo = T}
+summary(r)
+```
+
+## Random effect meta-analysis
+
+```{r}
+forest(r, comb.fixed = FALSE, plotwidth = "2.35cm")   
+```
+
+## Random effect meta-analysis: prediction interval
+
+```{r}
+forest(r, prediction = TRUE, plotwidth = "2.35cm")   
+```
+
+## Random effect meta-analysis: prediction interval
+
+When there are many studies in a meta-analysis, we may obtain a very tight confidence interval around the random-effects estimate of the mean effect even when there is a large amount of heterogeneity. 
+
+A solution to this problem is to consider a prediction interval
+
+## Which model should we choose?
+
+Fixed-effect model
+
+- all the studies are functionally identical. 
+- the goal is to compute the common effect size, which would not be generalized beyond the (narrowly defined) population included in the analysis. 
+
+
+Random-effects model
+
+- studies have enough in common, but they are not identical
+
+
+## Which model should we choose?
+
+Therefore, in the vast majority of meta-analyses the random-effects model would be the more appropriate choice. 
+
+It:
+
+* is more likely to fit the actual sampling distribution;
+* does not impose a restriction of a common effect size;
+* yields the identical results as the fixed-effect model in the absence of heterogeneity;
+* allows greater generalizability.
+
+## Subgroups
+
+```{r}
+a1 <- update(r, 
+             byvar = Timing,
+             bylab = "Time",
+             comb.fixed = F, comb.rand = T)
+forest(a1, plotwidth = "2.5cm")
+```
+
+
+## Subgroups
+
+```{r}
+summary(a1)
+```
+
+
+## Meta-regression
+
+```{r}
+mu2 <- update(a,
+              byvar = Timing, tau.common = TRUE, comb.fixed = FALSE)
+fit <- metareg(mu2)
+summary(fit)
+```
+
+
+## Publication bias: funnel plot
+
+```{r}
+funnel(a, xlab = "Hedges' g")
+```
+
+## Publication bias: test
+```{r}
+metabias(r)
+```
+
+## Conventional effect measures
+
+**Binary**
+
+* RR (Relative Risk)
+* OR (Odds Ratio)
+* RD (Risk Difference)
+
+**Continuous**
+
+* MD (Mean Difference)
+* SMD (Standardized Mean Difference)
+
+## Resources
+
+- Cochrane Handbook for Systematic Reviews of Interventions
+
+- Borenstein, Michael, et al. "A basic introduction to fixed‐effect and random‐effects models for meta‐analysis." Research synthesis methods 1.2 (2010): 97-111.
+
+- Schwarzer, Guido, James R. Carpenter, and Gerta Rücker. Meta-analysis with R. Vol. 4784. New York: springer, 2015.

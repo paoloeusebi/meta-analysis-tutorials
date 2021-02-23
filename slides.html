@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Paolo Eusebi" />
+  <title>Meta-analysis: an introduction</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="slides_files/reveal.js-3.3.0.1/css/reveal.css"/>
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="slides_files/reveal.js-3.3.0.1/css/theme/moon.css" id="theme">
+
+<style type="text/css">
+.reveal section img {
+  background: rgba(255, 255, 255, 0.85);
+}
+</style>
+
+  <!-- some tweaks to reveal css -->
+  <style type="text/css">
+    .reveal h1 { font-size: 2.0em; }
+    .reveal h2 { font-size: 1.5em;  }
+    .reveal h3 { font-size: 1.25em;	}
+    .reveal h4 { font-size: 1em;	}
+
+    .reveal .slides>section,
+    .reveal .slides>section>section {
+      padding: 0px 0px;
+    }
+
+
+
+    .reveal table {
+      border-width: 1px;
+      border-spacing: 2px;
+      border-style: dotted;
+      border-color: gray;
+      border-collapse: collapse;
+      font-size: 0.7em;
+    }
+
+    .reveal table th {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      font-weight: bold;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+    .reveal table td {
+      border-width: 1px;
+      padding-left: 10px;
+      padding-right: 25px;
+      border-style: dotted;
+      border-color: gray;
+    }
+
+
+  </style>
+
+    <style type="text/css">code{white-space: pre;}</style>
+
+
+<!-- Printing and PDF exports -->
+<script id="paper-css" type="application/dynamic-css">
+
+/* Default Print Stylesheet Template
+   by Rob Glazebrook of CSSnewbie.com
+   Last Updated: June 4, 2008
+
+   Feel free (nay, compelled) to edit, append, and
+   manipulate this file as you see fit. */
+
+
+@media print {
+
+	/* SECTION 1: Set default width, margin, float, and
+	   background. This prevents elements from extending
+	   beyond the edge of the printed page, and prevents
+	   unnecessary background images from printing */
+	html {
+		background: #fff;
+		width: auto;
+		height: auto;
+		overflow: visible;
+	}
+	body {
+		background: #fff;
+		font-size: 20pt;
+		width: auto;
+		height: auto;
+		border: 0;
+		margin: 0 5%;
+		padding: 0;
+		overflow: visible;
+		float: none !important;
+	}
+
+	/* SECTION 2: Remove any elements not needed in print.
+	   This would include navigation, ads, sidebars, etc. */
+	.nestedarrow,
+	.controls,
+	.fork-reveal,
+	.share-reveal,
+	.state-background,
+	.reveal .progress,
+	.reveal .backgrounds {
+		display: none !important;
+	}
+
+	/* SECTION 3: Set body font face, size, and color.
+	   Consider using a serif font for readability. */
+	body, p, td, li, div {
+		font-size: 20pt!important;
+		font-family: Georgia, "Times New Roman", Times, serif !important;
+		color: #000;
+	}
+
+	/* SECTION 4: Set heading font face, sizes, and color.
+	   Differentiate your headings from your body text.
+	   Perhaps use a large sans-serif for distinction. */
+	h1,h2,h3,h4,h5,h6 {
+		color: #000!important;
+		height: auto;
+		line-height: normal;
+		font-family: Georgia, "Times New Roman", Times, serif !important;
+		text-shadow: 0 0 0 #000 !important;
+		text-align: left;
+		letter-spacing: normal;
+	}
+	/* Need to reduce the size of the fonts for printing */
+	h1 { font-size: 28pt !important;  }
+	h2 { font-size: 24pt !important; }
+	h3 { font-size: 22pt !important; }
+	h4 { font-size: 22pt !important; font-variant: small-caps; }
+	h5 { font-size: 21pt !important; }
+	h6 { font-size: 20pt !important; font-style: italic; }
+
+	/* SECTION 5: Make hyperlinks more usable.
+	   Ensure links are underlined, and consider appending
+	   the URL to the end of the link for usability. */
+	a:link,
+	a:visited {
+		color: #000 !important;
+		font-weight: bold;
+		text-decoration: underline;
+	}
+	/*
+	.reveal a:link:after,
+	.reveal a:visited:after {
+		content: " (" attr(href) ") ";
+		color: #222 !important;
+		font-size: 90%;
+	}
+	*/
+
+
+	/* SECTION 6: more reveal.js specific additions by @skypanther */
+	ul, ol, div, p {
+		visibility: visible;
+		position: static;
+		width: auto;
+		height: auto;
+		display: block;
+		overflow: visible;
+		margin: 0;
+		text-align: left !important;
+	}
+	.reveal pre,
+	.reveal table {
+		margin-left: 0;
+		margin-right: 0;
+	}
+	.reveal pre code {
+		padding: 20px;
+		border: 1px solid #ddd;
+	}
+	.reveal blockquote {
+		margin: 20px 0;
+	}
+	.reveal .slides {
+		position: static !important;
+		width: auto !important;
+		height: auto !important;
+
+		left: 0 !important;
+		top: 0 !important;
+		margin-left: 0 !important;
+		margin-top: 0 !important;
+		padding: 0 !important;
+		zoom: 1 !important;
+
+		overflow: visible !important;
+		display: block !important;
+
+		text-align: left !important;
+		-webkit-perspective: none;
+		   -moz-perspective: none;
+		    -ms-perspective: none;
+		        perspective: none;
+
+		-webkit-perspective-origin: 50% 50%;
+		   -moz-perspective-origin: 50% 50%;
+		    -ms-perspective-origin: 50% 50%;
+		        perspective-origin: 50% 50%;
+	}
+	.reveal .slides section {
+		visibility: visible !important;
+		position: static !important;
+		width: auto !important;
+		height: auto !important;
+		display: block !important;
+		overflow: visible !important;
+
+		left: 0 !important;
+		top: 0 !important;
+		margin-left: 0 !important;
+		margin-top: 0 !important;
+		padding: 60px 20px !important;
+		z-index: auto !important;
+
+		opacity: 1 !important;
+
+		page-break-after: always !important;
+
+		-webkit-transform-style: flat !important;
+		   -moz-transform-style: flat !important;
+		    -ms-transform-style: flat !important;
+		        transform-style: flat !important;
+
+		-webkit-transform: none !important;
+		   -moz-transform: none !important;
+		    -ms-transform: none !important;
+		        transform: none !important;
+
+		-webkit-transition: none !important;
+		   -moz-transition: none !important;
+		    -ms-transition: none !important;
+		        transition: none !important;
+	}
+	.reveal .slides section.stack {
+		padding: 0 !important;
+	}
+	.reveal section:last-of-type {
+		page-break-after: avoid !important;
+	}
+	.reveal section .fragment {
+		opacity: 1 !important;
+		visibility: visible !important;
+
+		-webkit-transform: none !important;
+		   -moz-transform: none !important;
+		    -ms-transform: none !important;
+		        transform: none !important;
+	}
+	.reveal section img {
+		display: block;
+		margin: 15px 0px;
+		background: rgba(255,255,255,1);
+		border: 1px solid #666;
+		box-shadow: none;
+	}
+
+	.reveal section small {
+		font-size: 0.8em;
+	}
+
+}  
+</script>
+
+
+<script id="pdf-css" type="application/dynamic-css">
+    
+/**
+ * This stylesheet is used to print reveal.js
+ * presentations to PDF.
+ *
+ * https://github.com/hakimel/reveal.js#pdf-export
+ */
+
+* {
+	-webkit-print-color-adjust: exact;
+}
+
+body {
+	margin: 0 auto !important;
+	border: 0;
+	padding: 0;
+	float: none !important;
+	overflow: visible;
+}
+
+html {
+	width: 100%;
+	height: 100%;
+	overflow: visible;
+}
+
+/* Remove any elements not needed in print. */
+.nestedarrow,
+.reveal .controls,
+.reveal .progress,
+.reveal .playback,
+.reveal.overview,
+.fork-reveal,
+.share-reveal,
+.state-background {
+	display: none !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	text-shadow: 0 0 0 #000 !important;
+}
+
+.reveal pre code {
+	overflow: hidden !important;
+	font-family: Courier, 'Courier New', monospace !important;
+}
+
+ul, ol, div, p {
+	visibility: visible;
+	position: static;
+	width: auto;
+	height: auto;
+	display: block;
+	overflow: visible;
+	margin: auto;
+}
+.reveal {
+	width: auto !important;
+	height: auto !important;
+	overflow: hidden !important;
+}
+.reveal .slides {
+	position: static;
+	width: 100%;
+	height: auto;
+
+	left: auto;
+	top: auto;
+	margin: 0 !important;
+	padding: 0 !important;
+
+	overflow: visible;
+	display: block;
+
+	-webkit-perspective: none;
+	   -moz-perspective: none;
+	    -ms-perspective: none;
+	        perspective: none;
+
+	-webkit-perspective-origin: 50% 50%; /* there isn't a none/auto value but 50-50 is the default */
+	   -moz-perspective-origin: 50% 50%;
+	    -ms-perspective-origin: 50% 50%;
+	        perspective-origin: 50% 50%;
+}
+
+.reveal .slides section {
+	page-break-after: always !important;
+
+	visibility: visible !important;
+	position: relative !important;
+	display: block !important;
+	position: relative !important;
+
+	margin: 0 !important;
+	padding: 0 !important;
+	box-sizing: border-box !important;
+	min-height: 1px;
+
+	opacity: 1 !important;
+
+	-webkit-transform-style: flat !important;
+	   -moz-transform-style: flat !important;
+	    -ms-transform-style: flat !important;
+	        transform-style: flat !important;
+
+	-webkit-transform: none !important;
+	   -moz-transform: none !important;
+	    -ms-transform: none !important;
+	        transform: none !important;
+}
+
+.reveal section.stack {
+	margin: 0 !important;
+	padding: 0 !important;
+	page-break-after: avoid !important;
+	height: auto !important;
+	min-height: auto !important;
+}
+
+.reveal img {
+	box-shadow: none;
+}
+
+.reveal .roll {
+	overflow: visible;
+	line-height: 1em;
+}
+
+/* Slide backgrounds are placed inside of their slide when exporting to PDF */
+.reveal section .slide-background {
+	display: block !important;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: -1;
+}
+
+/* All elements should be above the slide-background */
+.reveal section>* {
+	position: relative;
+	z-index: 1;
+}
+
+/* Display slide speaker notes when 'showNotes' is enabled */
+.reveal .speaker-notes-pdf {
+	display: block;
+	width: 100%;
+	max-height: none;
+	left: auto;
+	top: auto;
+	z-index: 100;
+}
+
+/* Display slide numbers when 'slideNumber' is enabled */
+.reveal .slide-number-pdf {
+	display: block;
+	position: absolute;
+	font-size: 14px;
+}
+
+</script>
+
+
+<script>
+var style = document.createElement( 'style' );
+style.type = 'text/css';
+var style_script_id = window.location.search.match( /print-pdf/gi ) ? 'pdf-css' : 'paper-css';
+var style_script = document.getElementById(style_script_id).text;
+style.innerHTML = style_script;
+document.getElementsByTagName('head')[0].appendChild(style);
+</script>
+
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+    <h1 class="title">Meta-analysis: an introduction</h1>
+    <h2 class="author">Paolo Eusebi</h2>
+    <h3 class="date">22/2/2021</h3>
+</section>
+
+<section id="outline" class="slide level2">
+<h2>Outline</h2>
+<ul>
+<li>Meta-analysis</li>
+<li>Heterogeneity</li>
+<li>Fixed effects model</li>
+<li>Random effects model</li>
+<li>Publication bias</li>
+</ul>
+</section>
+<section id="definition" class="slide level2">
+<h2>Definition</h2>
+<p>Meta-analysis is a quantitative approach for systematically combining results of previous studies to arrive at conclusions about the body of research</p>
+<ul>
+<li>Quantitative: numbers</li>
+<li>Systematic: methodical</li>
+<li>Combining: putting together / summing up</li>
+<li>Previous research: already done</li>
+<li>Conclusions: new knowledge</li>
+</ul>
+<p>A study collects data from individual subjects</p>
+<p>A meta-analysis collects data from individual studies</p>
+</section>
+<section id="why" class="slide level2">
+<h2>Why</h2>
+<ul>
+<li>Identify heterogeneity in effects among multiple studies and, where appropriate, provide summary measure</li>
+<li>Increase statistical power and precision to detect an effect</li>
+<li>Reduce the subjectivity of study comparisons by using systematic and explicit comparison procedure</li>
+<li>Identify data gap in the knowledge base and suggest direction for future research</li>
+<li>Calculate sample size for future studies</li>
+</ul>
+</section>
+<section id="could-we-just-add-the-data-from-all-the-trials-togheter" class="slide level2">
+<h2>Could we just add the data from all the trials togheter?</h2>
+<ul>
+<li>One approach to combining trials would be to add all the treatment groups together, add all the control groups together, and compare the totals</li>
+<li>This is wrong for several reasons, and it can give the wrong answer</li>
+<li>Breaks the power of randomization</li>
+<li>Imbalances within trials introduce bias</li>
+</ul>
+</section>
+<section id="a-two-stage-process" class="slide level2">
+<h2>A two-stage process</h2>
+<ol type="1">
+<li><p>A summary statistic is calculated for each study, to describe the observed intervention effect.</p></li>
+<li><p>A summary (combined) intervention effect estimate is calculated as a weighted average.</p></li>
+</ol>
+<p><span class="math display">\[ \widehat y = \frac{\sum y_{i} \cdot w_{i}}{\sum w_{i}} \]</span></p>
+<p><span class="math inline">\(y_{i}\)</span> study estimate</p>
+<p><span class="math inline">\(w_{i}\)</span> study weight</p>
+</section>
+<section id="the-inverse-variance-method" class="slide level2">
+<h2>The inverse-variance method</h2>
+<ul>
+<li><p>The weight given to each study is chosen to be the inverse of the variance of the effect estimate</p></li>
+<li><p>Larger studies, which have smaller standard errors, are given more weight than smaller studies, which have larger standard errors.</p></li>
+<li><p>This choice of weights minimizes the imprecision (uncertainty) of the pooled effect estimate.</p></li>
+</ul>
+<p><span class="math display">\[ \widehat y = \frac{\sum y_{i} \cdot (1/V_i)}{\sum (1/V_i)} \]</span></p>
+<p><span class="math display">\[ w_{i} = 1/V_i \]</span></p>
+</section>
+<section id="thrombolysis-in-stroke-cochrane-review-2014" class="slide level2">
+<h2>Thrombolysis in Stroke (Cochrane Review 2014)</h2>
+<p><strong>Population</strong>: Acute ischaemic stroke</p>
+<p><strong>Intervention</strong>: Any thrombolytic agent</p>
+<p><strong>Comparison</strong>: Placebo</p>
+<p><strong>Outcome</strong>: Death or dependency by time to treatment up to 6 hours</p>
+<p><em>Wardlaw et al. &quot;Thrombolysis for acute ischaemic stroke.&quot; Cochrane database of systematic reviews 7 (2014).</em></p>
+</section>
+<section id="thrombolysis-in-stroke-cochrane-review-2014-1" class="slide level2">
+<h2>Thrombolysis in Stroke (Cochrane Review 2014)</h2>
+<pre><code>## # A tibble: 18 x 7
+##    Timing                Study       Year d.trom n.trom d.cont n.cont
+##    &lt;chr&gt;                 &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+##  1 Within 3 hours        ECASS       1995     28     49     25     38
+##  2 Within 3 hours        MAST-I      1995     46     79     69    103
+##  3 Within 3 hours        MAST-E      1996     19     26     14     21
+##  4 Within 3 hours        ASK         1996     14     41     15     29
+##  5 Within 3 hours        ECASS II    1998     39     81     44     77
+##  6 Within 3 hours        ATLANTIS B  1999      3     13     12     26
+##  7 Within 3 hours        Chen        2000     19     53     12     29
+##  8 Within 3 hours        ATLANTIS A  2000      7     10      7     12
+##  9 Within 3 hours        IST3        2012    299    431    323    418
+## 10 Between 3 and 6 hours MAST-I      1995    150    234    131    206
+## 11 Between 3 and 6 hours MAST-E      1996    105    130    112    133
+## 12 Between 3 and 6 hours ECASS       1995    143    264    160    269
+## 13 Between 3 and 6 hours ASK         1996     70    133     59    137
+## 14 Between 3 and 6 hours ECASS II    1998    148    328    167    314
+## 15 Between 3 and 6 hours ATLANTIS B  1999    133    284    128    286
+## 16 Between 3 and 6 hours Chen        2000    108    264     49    119
+## 17 Between 3 and 6 hours ATLANTIS A  2000     55     61     47     59
+## 18 Between 3 and 6 hours IST3        2012    662   1084    661   1100</code></pre>
+</section>
+<section id="thrombolysis-in-stroke-cochrane-review-2014-2" class="slide level2">
+<h2>Thrombolysis in Stroke (Cochrane Review 2014)</h2>
+<p><img src="slides_files/figure-revealjs/unnamed-chunk-2-1.png" width="768" /></p>
+</section>
+<section id="heterogeneity" class="slide level2">
+<h2>Heterogeneity</h2>
+<p><strong>Definition</strong></p>
+<p>Heterogeneity is the variation between the studies results.</p>
+<p><strong>Sources</strong></p>
+<ul>
+<li><p>Patients: diagnosis, in- and exclusion criteria, etc.</p></li>
+<li><p>Interventions: type, dose, duration, etc.</p></li>
+<li><p>Outcomes: type, scale, cut-off points, duration of follow-up, etc.</p></li>
+<li><p>Quality and methodology: randomised or not, allocation concealment, blinding, etc.</p></li>
+<li><p>...</p></li>
+</ul>
+</section>
+<section id="heterogeneity-1" class="slide level2">
+<h2>Heterogeneity</h2>
+<p><strong>Forest plot</strong></p>
+<p>Do confidence intervals of studies overlap with each other and the summary effect?</p>
+<p><strong>Statistics</strong></p>
+<ul>
+<li><p>Chi-square test for heterogeneity (e.g. Cochran Q test) Tests whether the individual effects are farther away from the common effect, beyond what is expected by chance. Poor power (P-value &lt; 0.10 indicates significant heterogeneity)</p></li>
+<li><p><span class="math inline">\(I^2\)</span> statistics (function of Q)</p></li>
+</ul>
+</section>
+<section id="heterogeneity-2" class="slide level2">
+<h2>Heterogeneity</h2>
+<p>Thresholds for the interpretation of the <span class="math inline">\(I^2\)</span> statistic can be misleading, since the importance of inconsistency depends on several factors.</p>
+<p>A rough guide to interpretation in the context of meta-analyses of randomized trials is as follows:</p>
+<ul>
+<li>0% to 40%: might not be important;</li>
+<li>30% to 60%: may represent moderate heterogeneity*;</li>
+<li>50% to 90%: may represent substantial heterogeneity*;</li>
+<li>75% to 100%: considerable heterogeneity*.</li>
+</ul>
+</section>
+<section id="how-to-deal-with-heterogeneity" class="slide level2">
+<h2>How to deal with heterogeneity</h2>
+<ul>
+<li><p>Do not pool at all</p></li>
+<li><p>Ignore heterogeneity: use fixed effect model</p></li>
+<li><p>Allow for heterogeneity: use random effects model</p></li>
+<li><p>Explore heterogeneity</p></li>
+</ul>
+</section>
+<section id="meta-analysis-of-binary-data" class="slide level2">
+<h2>Meta-analysis of binary data</h2>
+<ol type="1">
+<li>Mantel-Haenszel method</li>
+<li>Peto method</li>
+<li>Maximum-Likelihood</li>
+<li>Exact methods of interval estimation Fixed effect meta-analysis</li>
+</ol>
+</section>
+<section id="fixed-effect-meta-analysis" class="slide level2">
+<h2>Fixed effect meta-analysis</h2>
+<p>Fixed effects model assumes that the true effect of treatment is common in each study.</p>
+<p><span class="math display">\[ \widehat y = \frac{\sum y_{i} \cdot (1/SE_i)}{\sum (1/SE_i)} \]</span></p>
+<p><span class="math display">\[ w_{i} = 1/SE_i \]</span></p>
+</section>
+<section id="fixed-effect-meta-analysis-1" class="slide level2">
+<h2>Fixed effect meta-analysis</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">a &lt;-<span class="st"> </span><span class="kw">metabin</span>(<span class="dt">event.e =</span> d.trom,
+             <span class="dt">n.e =</span> n.trom,
+             <span class="dt">event.c =</span> d.cont,
+             <span class="dt">n.c =</span> n.cont,
+             <span class="dt">sm =</span> <span class="st">&quot;OR&quot;</span>,
+             <span class="dt">method =</span> <span class="st">&quot;Peto&quot;</span>,
+             <span class="dt">studlab =</span> <span class="kw">paste</span>(Study, Year),
+             <span class="dt">data =</span> df)</code></pre></div>
+</section>
+<section id="fixed-effect-meta-analysis-2" class="slide level2">
+<h2>Fixed effect meta-analysis</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(a,
+        <span class="dt">comb.random =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<pre><code>## Number of studies combined: k = 18
+## 
+##                        OR           95%-CI     z p-value
+## Fixed effect model 0.9160 [0.8301; 1.0108] -1.75  0.0808
+## 
+## Quantifying heterogeneity:
+##  tau^2 = 0.0199 [0.0000; 0.1572]; tau = 0.1412 [0.0000; 0.3965]
+##  I^2 = 28.2% [0.0%; 59.4%]; H = 1.18 [1.00; 1.57]
+## 
+## Test of heterogeneity:
+##      Q d.f. p-value
+##  23.66   17  0.1289
+## 
+## Details on meta-analytical method:
+## - Peto method
+## - DerSimonian-Laird estimator for tau^2
+## - Jackson method for confidence interval of tau^2 and tau</code></pre>
+</section>
+<section id="fixed-effect-meta-analysis-3" class="slide level2">
+<h2>Fixed effect meta-analysis</h2>
+<p><img src="slides_files/figure-revealjs/unnamed-chunk-5-1.png" width="768" /></p>
+</section>
+<section id="random-effect-meta-analysis" class="slide level2">
+<h2>Random effect meta-analysis</h2>
+<p>The treatment effects for the individual studies are assumed to vary around some overall average treatment effect</p>
+<p>Allows for random error plus inter-study variability</p>
+<p><span class="math display">\[ \widehat y = \frac{\sum y_{i} \cdot 1/(V_i+T^2)}{\sum 1/(V_i+T^2)} \]</span></p>
+<p><span class="math display">\[ w_{i} = 1/(V_i+T^2) \]</span></p>
+</section>
+<section id="random-effect-meta-analysis-1" class="slide level2">
+<h2>Random effect meta-analysis</h2>
+<p>There are several approaches to be taken:</p>
+<ul>
+<li>Method of moments approach (e.g. DerSimonian-Laird)</li>
+<li>Hartung-Makambi</li>
+<li>Sidik-Jonkman</li>
+<li>Restricted Maximum Likelihood</li>
+</ul>
+<p><em>Langan et al. A comparison of heterogeneity variance estimators in simulated random-effects meta-analyses. Res Synth Methods 2019</em></p>
+</section>
+<section id="random-effect-meta-analysis-2" class="slide level2">
+<h2>Random effect meta-analysis</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">r &lt;-<span class="st"> </span><span class="kw">metabin</span>(<span class="dt">event.e =</span> d.trom,
+             <span class="dt">n.e =</span> n.trom,
+             <span class="dt">event.c =</span> d.cont,
+             <span class="dt">n.c =</span> n.cont,
+             <span class="dt">sm =</span> <span class="st">&quot;OR&quot;</span>,
+             <span class="dt">method =</span> <span class="st">&quot;Peto&quot;</span>,
+             <span class="dt">method.tau =</span> <span class="st">&quot;REML&quot;</span>,
+             <span class="dt">studlab =</span> <span class="kw">paste</span>(Study, Year),
+             <span class="dt">comb.fixed =</span> <span class="ot">FALSE</span>,
+             <span class="dt">comb.random =</span> <span class="ot">TRUE</span>,
+             <span class="dt">data =</span> df)</code></pre></div>
+</section>
+<section id="random-effect-meta-analysis-3" class="slide level2">
+<h2>Random effect meta-analysis</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(r)</code></pre></div>
+<pre><code>## Number of studies combined: k = 18
+## 
+##                          OR           95%-CI     z p-value
+## Random effects model 0.8949 [0.7816; 1.0247] -1.61  0.1081
+## 
+## Quantifying heterogeneity:
+##  tau^2 = 0.0206 [0.0000; 0.1733]; tau = 0.1437 [0.0000; 0.4163]
+##  I^2 = 28.2% [0.0%; 59.4%]; H = 1.18 [1.00; 1.57]
+## 
+## Test of heterogeneity:
+##      Q d.f. p-value
+##  23.66   17  0.1289
+## 
+## Details on meta-analytical method:
+## - Peto method
+## - Restricted maximum-likelihood estimator for tau^2
+## - Q-profile method for confidence interval of tau^2 and tau</code></pre>
+</section>
+<section id="random-effect-meta-analysis-4" class="slide level2">
+<h2>Random effect meta-analysis</h2>
+<p><img src="slides_files/figure-revealjs/unnamed-chunk-8-1.png" width="768" /></p>
+</section>
+<section id="random-effect-meta-analysis-prediction-interval" class="slide level2">
+<h2>Random effect meta-analysis: prediction interval</h2>
+<p><img src="slides_files/figure-revealjs/unnamed-chunk-9-1.png" width="768" /></p>
+</section>
+<section id="random-effect-meta-analysis-prediction-interval-1" class="slide level2">
+<h2>Random effect meta-analysis: prediction interval</h2>
+<p>When there are many studies in a meta-analysis, we may obtain a very tight confidence interval around the random-effects estimate of the mean effect even when there is a large amount of heterogeneity.</p>
+<p>A solution to this problem is to consider a prediction interval</p>
+</section>
+<section id="which-model-should-we-choose" class="slide level2">
+<h2>Which model should we choose?</h2>
+<p>Fixed-effect model</p>
+<ul>
+<li>all the studies are functionally identical.</li>
+<li>the goal is to compute the common effect size, which would not be generalized beyond the (narrowly defined) population included in the analysis.</li>
+</ul>
+<p>Random-effects model</p>
+<ul>
+<li>studies have enough in common, but they are not identical</li>
+</ul>
+</section>
+<section id="which-model-should-we-choose-1" class="slide level2">
+<h2>Which model should we choose?</h2>
+<p>Therefore, in the vast majority of meta-analyses the random-effects model would be the more appropriate choice.</p>
+<p>It:</p>
+<ul>
+<li>is more likely to fit the actual sampling distribution;</li>
+<li>does not impose a restriction of a common effect size;</li>
+<li>yields the identical results as the fixed-effect model in the absence of heterogeneity;</li>
+<li>allows greater generalizability.</li>
+</ul>
+</section>
+<section id="subgroups" class="slide level2">
+<h2>Subgroups</h2>
+<p><img src="slides_files/figure-revealjs/unnamed-chunk-10-1.png" width="768" /></p>
+</section>
+<section id="subgroups-1" class="slide level2">
+<h2>Subgroups</h2>
+<pre><code>## Number of studies combined: k = 18
+## 
+##                          OR           95%-CI     z p-value
+## Random effects model 0.8949 [0.7816; 1.0247] -1.61  0.1081
+## 
+## Quantifying heterogeneity:
+##  tau^2 = 0.0206 [0.0000; 0.1733]; tau = 0.1437 [0.0000; 0.4163]
+##  I^2 = 28.2% [0.0%; 59.4%]; H = 1.18 [1.00; 1.57]
+## 
+## Test of heterogeneity:
+##      Q d.f. p-value
+##  23.66   17  0.1289
+## 
+## Results for subgroups (random effects model):
+##                                k     OR           95%-CI  tau^2    tau     Q
+## Time = Within 3 hours          9 0.6865 [0.5527; 0.8528]      0      0  3.40
+## Time = Between 3 and 6 hours   9 0.9835 [0.8576; 1.1279] 0.0092 0.0961 11.70
+##                                I^2
+## Time = Within 3 hours         0.0%
+## Time = Between 3 and 6 hours 31.6%
+## 
+## Test for subgroup differences (random effects model):
+##                     Q d.f. p-value
+## Between groups   7.54    1  0.0060
+## 
+## Details on meta-analytical method:
+## - Peto method
+## - Restricted maximum-likelihood estimator for tau^2
+## - Q-profile method for confidence interval of tau^2 and tau</code></pre>
+</section>
+<section id="meta-regression" class="slide level2">
+<h2>Meta-regression</h2>
+<pre><code>## 
+## Mixed-Effects Model (k = 18; tau^2 estimator: DL)
+## 
+##   logLik  deviance       AIC       BIC      AICc 
+##  -2.5233   15.1065   11.0466   13.7177   12.7608   
+## 
+## tau^2 (estimated amount of residual heterogeneity):     0 (SE = 0.0189)
+## tau (square root of estimated tau^2 value):             0
+## I^2 (residual heterogeneity / unaccounted variability): 0.00%
+## H^2 (unaccounted variability / sampling variability):   1.00
+## R^2 (amount of heterogeneity accounted for):            100.00%
+## 
+## Test for Residual Heterogeneity:
+## QE(df = 16) = 15.1065, p-val = 0.5169
+## 
+## Test of Moderators (coefficient 2):
+## QM(df = 1) = 8.5568, p-val = 0.0034
+## 
+## Model Results:
+## 
+##                       estimate      se     zval    pval    ci.lb    ci.ub 
+## intrcpt                -0.0128  0.0564  -0.2271  0.8203  -0.1234   0.0977     
+## .byvarWithin 3 hours   -0.3633  0.1242  -2.9252  0.0034  -0.6067  -0.1199  ** 
+## 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</section>
+<section id="publication-bias-funnel-plot" class="slide level2">
+<h2>Publication bias: funnel plot</h2>
+<p><img src="slides_files/figure-revealjs/unnamed-chunk-13-1.png" width="768" /></p>
+</section>
+<section id="publication-bias-test" class="slide level2">
+<h2>Publication bias: test</h2>
+<pre><code>## 
+##  Linear regression test of funnel plot asymmetry (efficient score)
+## 
+## data:  r
+## t = -0.58616, df = 16, p-value = 0.5659
+## alternative hypothesis: asymmetry in funnel plot
+## sample estimates:
+##        bias     se.bias   intercept 
+## -0.31289939  0.53381596 -0.03123559</code></pre>
+</section>
+<section id="conventional-effect-measures" class="slide level2">
+<h2>Conventional effect measures</h2>
+<p><strong>Binary</strong></p>
+<ul>
+<li>RR (Relative Risk)</li>
+<li>OR (Odds Ratio)</li>
+<li>RD (Risk Difference)</li>
+</ul>
+<p><strong>Continuous</strong></p>
+<ul>
+<li>MD (Mean Difference)</li>
+<li>SMD (Standardized Mean Difference)</li>
+</ul>
+</section>
+<section id="resources" class="slide level2">
+<h2>Resources</h2>
+<ul>
+<li><p>Cochrane Handbook for Systematic Reviews of Interventions</p></li>
+<li><p>Borenstein, Michael, et al. &quot;A basic introduction to fixed‐effect and random‐effects models for meta‐analysis.&quot; Research synthesis methods 1.2 (2010): 97-111.</p></li>
+<li><p>Schwarzer, Guido, James R. Carpenter, and Gerta Rücker. Meta-analysis with R. Vol. 4784. New York: springer, 2015.</p></li>
+</ul>
+</section>
+    </div>
+  </div>
+
+  <script src="slides_files/reveal.js-3.3.0.1/lib/js/head.min.js"></script>
+  <script src="slides_files/reveal.js-3.3.0.1/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'default', // none/fade/slide/convex/concave/zoom
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+
+
+
+        // Optional reveal.js plugins
+        dependencies: [
+        ]
+      });
+    </script>
+  <!-- dynamically load mathjax for compatibility with self-contained -->
+  <script>
+    (function () {
+      var script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+      document.getElementsByTagName("head")[0].appendChild(script);
+    })();
+  </script>
+
+<script>
+  (function() {
+    if (window.jQuery) {
+      Reveal.addEventListener( 'slidechanged', function(event) {  
+        window.jQuery(event.previousSlide).trigger('hidden');
+        window.jQuery(event.currentSlide).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+
+  </body>
+</html>
